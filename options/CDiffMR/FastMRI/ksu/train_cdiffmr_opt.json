@@ -1,0 +1,126 @@
+{
+    "task": "CDiffMR_FastMRIKneePD_m.0.4.s2.ksu.cran.LogSR.d.1.0.cplx.2ch_DEBUG"    
+    , "model": "cdiffmr_m.0.4.ksu"    
+    , "mask": "fMRI_Ran_AF4_CF0.08_PE320"  
+    , "gpu_ids": [0, 1]
+    , "dist": false   
+    , "n_channels": 1    
+    , "use_pretrain_weight": null 
+    , "manual_seed": 42
+    , "path": {
+      "root": "mri_recon_dm"
+      , "pretrained_net_model_DM": null      
+      , "pretrained_net_model_EMA": null      
+    }
+    , "wandb": {
+      "mode": "disabled"  
+      , "project_name": "MRI_Recon-CDiffMR"
+      , "is_sweep": false
+      , "sweep_num_agent": null
+      , "sweep_configuration": null
+    }
+    , "datasets": {
+      "train": {
+        "name": "train_dataset"
+        , "dataset_type": "fastmri.d.1.1.complex"
+        , "dataroot_H": "../K-SpaceColdDiffusion/data/singlecoil_train"   
+        , "mask": "fMRI_Ran_AF4_CF0.08_PE320"   
+        , "H_size": 320   
+        , "sigma": 15
+        , "sigma_test": 15
+        , "is_noise": false   
+        , "noise_level": 0.0    
+        , "noise_var": 0.1
+        , "is_mini_dataset": false   
+        , "mini_dataset_prec": 1    
+        , "dataloader_shuffle": true
+        , "dataloader_num_workers": 2
+        , "dataloader_batch_size": 2
+        , "pixel_range": "complex"
+        , "is_augmentation": false
+        , "complex_type": "2ch"
+      }
+      , "test": {
+        "name": "test_dataset"
+        , "dataset_type": "fastmri.d.1.1.complex"
+        , "dataroot_H": "../K-SpaceColdDiffusion/data/singlecoil_val"   
+        , "mask": "fMRI_Ran_AF4_CF0.08_PE320"   
+        , "sigma": 15
+        , "sigma_test": 15
+        , "is_noise": false    
+        , "noise_level": 0.0    
+        , "noise_var": 0.1
+        , "pixel_range": "complex"
+        , "complex_type": "2ch"
+      }
+    }
+  
+  
+    , "denoise_fn": {
+      "net_type": "cdiffmr_unet2"
+      , "in_channels": 2
+      , "out_channels": 2
+      , "resolution": 320
+      , "emb_channels": 128
+      , "img_range": 1.0
+      , "emb_channels_multi": [1, 2, 2, 2]
+      , "num_res_blocks": 2
+      , "attn_resolutions": [16]
+      , "dropout": 0.1
+      , "resamp_with_conv": true
+      , "init_type": "default"
+      , "init_bn_type": "default"
+      , "init_gain": 1
+      , "condition": {
+        "is_dc": false,
+        "is_concat": false,
+        "is_add": false
+      }
+  
+    }
+  
+    , "diffusion": {
+      "diffusion_type": "cold_diffusion_ksu"
+      , "time_step": 100
+      , "sampling_routine": "x0_step_down" 
+      , "degradation": {
+        "ksu_routine": "LogSamplingRate"
+        , "ksu_mask_type": "cartesian_random" 
+        , "pe": 320
+        , "fe": 320
+      }
+  
+  }
+    , "train": {
+      "lossfn_type": "l1"    
+      , "lossfn_weight": 1.0    
+      , "charbonnier_eps": null    
+      , "alpha": 1    
+      , "beta": null    
+      , "gamma": null    
+      , "E_decay": 0.995    
+      , "model_DM_optimizer_type": "adam"    
+      , "model_DM_optimizer_lr": 2e-5    
+      , "model_DM_optimizer_wd": 0    
+      , "model_DM_optimizer_clipgrad": null
+      , "model_DM_optimizer_reuse": true
+  
+      , "model_DM_scheduler_type": "MultiStepLR"
+      , "model_DM_scheduler_milestones": [10000000, 20000000]
+      , "model_DM_scheduler_gamma": 0.1
+  
+      , "model_DM_regularizer_orthstep": null
+      , "model_DM_regularizer_clipstep": null
+  
+      , "model_DM_param_strict": true
+      , "model_EMA_param_strict": true
+  
+      , "model_DM_gradient_accumulation_every": 4
+  
+      , "checkpoint_test": 10    
+      , "checkpoint_save": 10    
+      , "checkpoint_print": 10   
+      , "is_early_stopping": false
+    }
+  }
+  

@@ -146,7 +146,7 @@ def main(json_path=''):
 
     if 'val' not in list(opt['datasets'].keys()):
         opt['datasets']['val'] = opt['datasets']['test']
-    del opt['datasets']['test']
+    del opt['datasets']['test'] # why this
 
     for phase, dataset_opt in opt['datasets'].items():
         if phase == 'train':
